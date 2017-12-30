@@ -3,6 +3,7 @@ import cryptocurrency
 
 # Currencies to value cryptocurrencies against:
 TO_CURRENCIES = ['USD', 'GBP', 'EUR']
+EXCHANGES = ['CCCAGG', 'Coinbase', 'Bitstamp', 'Poloniex']
 
 
 # Set up all cryptocurrencies as classes:
@@ -11,19 +12,16 @@ litecoin = cryptocurrency.Cryptocurrency('LTC')
 ethereum = cryptocurrency.Cryptocurrency('ETH')
 
 # Creating and populating table for each cryptocurrency class:
-for i in TO_CURRENCIES:
-    bitcoin.create_table(i)
-    bitcoin.populate_table(i)
+for c in TO_CURRENCIES:
+    for e in EXCHANGES:
+        bitcoin.create_table(c, e)
+        bitcoin.populate_table(c, e)
 
-    litecoin.create_table(i)
-    litecoin.populate_table(i)
+        litecoin.create_table(c, e)
+        litecoin.populate_table(c, e)
 
-    ethereum.create_table(i)
-    ethereum.populate_table(i)
-
-
-
-
+        ethereum.create_table(c, e)
+        ethereum.populate_table(c, e)
 
 
 

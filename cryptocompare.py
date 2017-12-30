@@ -3,7 +3,7 @@ import time
 import requests
 
 
-URL_HISTO_DAY = "https://min-api.cryptocompare.com/data/histoday?fsym={}&tsym={}&toTs={}&allData=true"
+URL_HISTO_DAY = "https://min-api.cryptocompare.com/data/histoday?fsym={}&tsym={}&toTs={}&e={}&allData=true"
 
 
 def request_cryptocompare(url, error_check=False):
@@ -18,9 +18,23 @@ def request_cryptocompare(url, error_check=False):
         return None
     return response
 
-def get_histo_day(from_currency_symbol, to_currency_symbol, to_timestamp=time.time()):
+def get_histo_day(from_currency_symbol, to_currency_symbol, exchange, to_timestamp=time.time()):
     """Adjusts URL to contain given parameters before running request"""
     if isinstance(to_timestamp, datetime.datetime):
         to_timestamp = time.mktime(to_timestamp.timetuple())  # converts datetime.datetime to timestamp
-    return request_cryptocompare(url=URL_HISTO_DAY.format(from_currency_symbol, to_currency_symbol, int(to_timestamp)))
+    return request_cryptocompare(url=URL_HISTO_DAY.format(from_currency_symbol,
+                                                          to_currency_symbol,
+                                                          int(to_timestamp),
+                                                          exchange))
+
+
+
+
+
+# For module testing:
+if __name__ == "__main__":
+
+    var = get_histo_day('BTC', 'GBP', 'Bitstamp')
+    print(var)
+    print(var['Response'])
 
