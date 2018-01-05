@@ -20,7 +20,10 @@ def mavg(pair, num_of_days, start_date):
     if len(avg_prices) == 0:
        return 0
     return sum(avg_prices)/len(avg_prices)
-
+    
+    connection.commit()
+    connection.close()
+    
 def macd(pair,shorter,longer,start_date):
     mac = mavg(pair,longer,start_date)
     start_date += datetime.timedelta(days=(longer-shorter))
@@ -58,6 +61,9 @@ def stoch_osc(pair,window,date):
               high = row[3]
     return 100*(rows[len(rows)-1][5]-low)/(high-low)
 
+    connection.commit()
+    connection.close()
+    
 def stoch_osc_mavg(pair,num_of_days,window,date):
     avg_stoch = []
     for i in range(num_of_days):
