@@ -15,7 +15,7 @@ def mavg(pair, num_of_days, start_date):
     rows = filter(None,rows)
 
     for row in rows:
-       avg = (row[3] + row[4]) / 2
+       avg = row[5]
        avg_prices.append(avg)
     if len(avg_prices) == 0:
        return 0
