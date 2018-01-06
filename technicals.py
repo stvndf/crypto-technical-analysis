@@ -1,6 +1,7 @@
 import database
 import datetime
 import numpy
+from decimal import Decimal
 
 def mavg(pair, num_of_days, start_date):
     connection = database.connect()
@@ -23,11 +24,38 @@ def mavg(pair, num_of_days, start_date):
     
     connection.commit()
     connection.close()
+
+def ema(pair,num_of_days,start_date):
+    connection = database.connect()
+    cursor = connection.cursor()
+    rows = []
+    first_day = mavg(pair,num_of_days,start_date-datetime.timedelta(days=1))
+    for i in range(num_of_days):
+       cursor.execute("SELECT * FROM " + pair + " WHERE date = '" + str(start_date) + "';")
+       rows.append(cursor.fetchone())
+       start_date += datetime.timedelta(days=1)
+    #rows = filter(None,rows)
+    check = 0
+    ema = 0
+    multiplier = str((2.0/(float(num_of_days)+1.0)))
+    for row in rows:
+       if row is None:
+           pass
+       else:
+           if check == 0:
+               ema = (row[5] - first_day) * Decimal(multiplier) + first_day
+           else:
+               ema = (row[5] - ema) * Decimal(multiplier) + ema
+
+    return ema
+    
+    connection.commit()
+    connection.close()
     
 def macd(pair,shorter,longer,start_date):
-    mac = mavg(pair,longer,start_date)
+    mac = ema(pair,longer,start_date)
     start_date += datetime.timedelta(days=(longer-shorter))
-    mic = mavg(pair,shorter,start_date)
+    mic = ema(pair,shorter,start_date)
 
     if mic < mac:
         return 0
